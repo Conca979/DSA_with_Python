@@ -2825,3 +2825,24 @@ def printTwinklingTree(treeHeight, frames=50, delay=0.2):
     for _ in range(trunkHeight):
       print(" " * trunkSpaces + "|" * trunkWidth)
     time.sleep(delay)
+
+def digitFrequencyScore(self, n: int) -> int:
+  n = str(n)
+  n = Counter(n)
+  score = 0
+  for k in n:
+    score += int(k)*n[k]
+
+  return score
+
+def minimumSwaps(nums: list[int]) -> int:
+  count_zeros = 0
+  for i in nums:
+    if i == 0:
+      count_zeros += 1
+  
+  for i in range(count_zeros):
+    if nums[-1 - i] == 0:
+      count_zeros -= 1
+
+  return count_zeros
