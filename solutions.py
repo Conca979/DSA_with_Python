@@ -2873,4 +2873,4 @@ def finishTime(n: int, edges: List[List[int]], baseTime: List[int]) -> int:
       result = 2*latest - earliest + base_time[task_number]
       return result
   
-  return get_own_duration(tasks= dict_edges, base_time= baseTime, task_number= 0)
+  return get_own_duration(tasks= dict_edges, base_time= baseTime, task_number= 0) 
