@@ -2846,3 +2846,31 @@ def minimumSwaps(nums: list[int]) -> int:
       count_zeros -= 1
 
   return count_zeros
+
+def finishTime(n: int, edges: List[List[int]], baseTime: List[int]) -> int:
+  # Dictionizing the edges
+  dict_edges = {}
+  for task in edges:
+    if task[0] not in dict_edges:
+      dict_edges[task[0]] = [task[1]]
+    else:
+      dict_edges[task[0]].append(task[1])
+
+  def get_own_duration(tasks, base_time, task_number: int) -> int:
+    if task_number not in tasks: # leaf task
+      return base_time[task_number] # return baseTime[i]
+    else:
+      latest = earliest = -1
+      for t in tasks[task_number]:
+        t_duration = get_own_duration(tasks, base_time, t)
+        if latest == -1:
+          latest = earliest = t_duration
+        if t_duration > latest:
+          latest = t_duration
+        elif t_duration < earliest:
+          earliest = t_duration
+
+      result = 2*latest - earliest + base_time[task_number]
+      return result
+  
+  return get_own_duration(tasks= dict_edges, base_time= baseTime, task_number= 0)
