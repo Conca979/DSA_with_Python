@@ -12,7 +12,6 @@ import collections
 from collections import Counter
 # import copy
 # import heapq
-import numpy as np
 # from sklearn.linear_model import LinearRegression
 # from sklearn.cluster import KMeans
 from typing import List, Optional
@@ -2874,3 +2873,7 @@ def finishTime(n: int, edges: List[List[int]], baseTime: List[int]) -> int:
       return result
   
   return get_own_duration(tasks= dict_edges, base_time= baseTime, task_number= 0) 
+
+def maxDistance(moves: str) -> int:
+  d_moves = Counter(moves)
+  return abs(d_moves['D'] - d_moves['U']) + abs(d_moves['L'] - d_moves['R']) + d_moves['_']
