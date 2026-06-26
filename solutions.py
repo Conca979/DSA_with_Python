@@ -2874,6 +2874,20 @@ def finishTime(n: int, edges: List[List[int]], baseTime: List[int]) -> int:
   
   return get_own_duration(tasks= dict_edges, base_time= baseTime, task_number= 0) 
 
-def maxDistance(moves: str) -> int:
+def maxDistance(moves: str) -> int: #3968
   d_moves = Counter(moves)
   return abs(d_moves['D'] - d_moves['U']) + abs(d_moves['L'] - d_moves['R']) + d_moves['_']
+
+def createGrid(m: int, n: int) -> list[str]: # 3963
+  grid = []
+  for row in range(m):
+    r = ""
+    for col in range(n):
+      if col == 0 or row == m - 1:
+        r += '.'
+      else:
+        r += '#'
+
+    grid.append(r)
+
+  return grid
