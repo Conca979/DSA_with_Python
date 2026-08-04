@@ -2455,8 +2455,9 @@ class Queue:
       print("[{}]".format(temp.data))
       temp = temp.prv""")
   
-def BSTreeImplementation():
-  print(r'''class Node:
+# Binary Tree ----------------------------------------------
+
+class Node:
   def __init__(self, data):
     self.data = data
     self.lChild = None
@@ -2648,7 +2649,9 @@ class BSTree:
 tree = BSTree()
 arr = [20, 10, 21, 6, 29, 1, 7, 28, 30, 9, 26, 8, 27]
 for _ in arr:
-  tree.insert(_)''')
+  tree.insert(_)
+
+# Binary Tree ----------------------------------------------
 
 class Trie: 
   def __init__(self, words = None):
@@ -2891,3 +2894,113 @@ def createGrid(m: int, n: int) -> list[str]: # 3963
     grid.append(r)
 
   return grid
+
+def generateValidStrings(n: int, k: int) -> list[str]:
+  a = ['0' for _ in range(n)]
+  valid_strings = []
+
+  def insert_bit(_str: List, i: int, bit: str, cur_val: int, limit= k):
+    if i == len(_str): return
+    if cur_val > limit:
+      return
+    else:
+      if i >= 1 and _str[i-1] == '1' and bit == '1':
+        return
+      else:
+        _str[i] = bit
+        valid_strings.append("".join(_str))
+
+        # Insert bit 0
+        insert_bit(_str, i+1, '0', cur_val + i + 1, limit)
+        # Insert bit 1
+        insert_bit(_str, i+1, '1', cur_val + i + 1, limit)
+
+        _str[i] = '0'
+
+  insert_bit(_str= a, i= 0, bit= '0', cur_val= 0, limit= k)
+  insert_bit(_str= a, i= 0, bit= '1', cur_val= 0, limit= k)
+
+  return list(set(valid_strings))
+
+def det(matrix: List[List]): # matrix determinant by laplace expansion
+  def sub_matrix_det_expansion(m: List[List], col: int):
+    sub_matrix = [[m[r][c] for c in range(len(m[0])) if c != col] for r in range(1, len(m))]
+    if len(sub_matrix) == 0: return 1
+    v = 0
+    for c in range(len(sub_matrix[0])):
+      v += sub_matrix[0][c]*(1 if c%2 == 0 else -1)*sub_matrix_det_expansion(m= sub_matrix, col= c)
+    return v
+  
+  val = 0
+  for i in range(len(matrix)):
+    val += matrix[0][i]*(1 if i%2 == 0 else -1)*sub_matrix_det_expansion(m= matrix, col= i)
+  return val
+
+def maxSum(nums: list[int], k: int, mul: int) -> int: # 3974
+  nums = sorted(nums)[len(nums)-1:-k-1:-1]
+  print(nums)
+
+  total_sum = 0
+  for val in nums:
+    if val < 0:
+      if mul <= 0:
+        total_sum += val*mul
+      else:
+        total_sum += val
+    else:
+      if mul > 0:
+        total_sum += val*mul
+      else:
+        total_sum += val
+    mul -= 1
+
+  return total_sum
+
+def countValidSubarrays(nums: list[int], x: int) -> int: # 3969
+  def get_leftmost_digit(num: int):
+    return int(num/(10**int(math.log(num, 10))))
+
+  subarray_count = 0
+  for i in range(len(nums)):
+    sum_ = 0
+    for j in range(i, len(nums)):
+      sum_ += nums[j]
+      if sum_ % 10 == x and get_leftmost_digit(sum_) == x:
+        subarray_count += 1
+
+  return subarray_count
+
+def maxValidPairSum(nums: list[int], k: int) -> int: # 3979
+  outer_max = nums[0]
+  inner_max = nums[0]
+
+  for i in range(k, len(nums)):
+    if nums[i-k] > inner_max:
+      inner_max = nums[i-k]
+
+    if (inner_max + nums[i]) > outer_max:
+      outer_max = inner_max + nums[i]
+
+  return outer_max
+
+def merge(intervals: List[List[int]]) -> List[List[int]]: # 56 - redo
+  flatten = [i for a in sorted(intervals) for i in a]
+  i = 1
+  j = 2
+  new_flatten = [flatten[0]]
+
+  while (i < (len(flatten) - 2)) and (j < len(flatten)):
+    if flatten[i] >= flatten[j]:
+      if flatten[i] >= flatten[j+1]:
+        j += 2
+      else:
+        i = j + 1
+        j = i + 1
+    else:
+      new_flatten.append(flatten[i])
+      new_flatten.append(flatten[j])
+      i = j + 1
+      j = i + 1
+
+  new_flatten.append(flatten[i])
+  print(new_flatten)
