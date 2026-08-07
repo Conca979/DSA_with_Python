@@ -181,11 +181,9 @@ class Graph:
     def push(token):  # over-writting instead of in-place assignment
       if token[1] in vertex_tracker:
         vertex_tracker[token[1]][-1] = False
-        vertex_tracker[token[1]] = token
-        hp.heappush(min_priority_heap, token + [True])
-      else:
-        vertex_tracker[token[1]] = token
-        hp.heappush(min_priority_heap, token + [True])
+
+      vertex_tracker[token[1]] = token
+      hp.heappush(min_priority_heap, token + [True])
 
     def pop():
       while len(min_priority_heap) != 0:
