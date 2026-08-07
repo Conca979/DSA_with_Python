@@ -329,7 +329,7 @@ class BSTree:
 
 # -------------------------------------------------
 
-arr = large_debug_array = random.sample(range(1, 20), 10)
+arr = random.sample(range(1, 20), 10)
 # arr = [20,10,30,40]
 tree = BSTree()
 
