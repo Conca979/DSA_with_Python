@@ -1,4 +1,3 @@
-from math import inf
 import heapq as hp
 
 class Vertex:
@@ -317,3 +316,6 @@ def run(v1, v2):
 
 run('A', 'AC')
 run('A', 'Y')
+run('A', 'Q')
+run('A', 'I')
+run('G', 'Z')
