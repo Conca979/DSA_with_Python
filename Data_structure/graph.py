@@ -1,14 +1,16 @@
 import heapq as hp
+from typing import Optional, Annotated
+# from pydantic.fields import Gt
 
 class Vertex:
-  def __init__(self, val=None):
+  def __init__(self, val: float):
     self.val = val
-    self.out_edges = dict()  # name: weight
-    self.in_edges = dict()  # name: weight
+    self.out_edges: dict[str, float] = dict()  # name: weight
+    self.in_edges: dict[str, float] = dict()  # name: weight
 
 class Graph:
   def __init__(self):
-    self.vertices = dict()  # name: vertex object
+    self.vertices: dict[str, Vertex] = dict()  # name: vertex object
     self._vertex_count = 0
     self._edge_count = 0
 

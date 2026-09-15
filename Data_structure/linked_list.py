@@ -1,61 +1,63 @@
 import random
+from typing import Optional
+# Optional indicates a parameter, variable or return value can hold a specified data type or None
 
+class Node:
+  def __init__(self, val:float, left: Optional['Node']=None, right: Optional['Node']=None) -> None:
+    self.val = val
+    self.left = left
+    self.right = right
 
 class BSTree:
-  class Node:
-    def __init__(self, val, left=None, right=None):
-      self.val = val
-      self.left = left
-      self.right = right
-
   def __init__(self):
-    self.root = None
-    self.nodes = 0
+    self.root: Optional[Node] = None
+    self.nodes: int = 0
   
-  def insert(self, val):
-    def _insert(node, val=val):
+  def insert(self, val: float) -> None:
+    def _insert(node: Node, val: float=val):
       if node.val > val:
         if node.left is None:
-          node.left = self.Node(val=val)
+          node.left = Node(val=val)
         else: _insert(node= node.left, val=val)
       else:
         if node.right is None:
-          node.right = self.Node(val=val)
+          node.right = Node(val=val)
         else:
           _insert(node= node.right, val=val)
 
     if self.root is None:
-      self.root = self.Node(val=val)
+      self.root = Node(val=val)
       self.nodes += 1
     else:
       _insert(node= self.root, val=val)
       self.nodes += 1
 
-  def DFS(self, type=1):  # 1, 2, 3 = in order, pre order, post order
-    arr = []
+  def DFS(self, type: int=1) -> list[float]:
+    arr: list[float] = []
 
-    def _run(node=self.root):
+    def _run(node: Optional['Node']=self.root) -> Optional[list[float]]:
       if node is None:
         return
 
-      if type == 1:
+      if type == 1:  # in-order traversal
         _run(node=node.left)
         arr.append(node.val)
         _run(node=node.right)
-      elif type == 2:
+      elif type == 2:  # pre-order traversal
         arr.append(node.val)
         _run(node=node.left)
         _run(node=node.right)
-      else:
+      else:   # post-order traversal
         _run(node.left)
         _run(node.right)
         arr.append(node.val)
 
     _run()
     return arr
-  
-  def search(self, val):
-    def _run(node=self.root, val=val):
+
+  # search for a node object with value of val
+  def search(self, val: float) -> Optional[Node]:
+    def _run(node: Optional[Node]=self.root, val: float=val) -> Optional[Node]:
       if node is None:
         return None
       
@@ -69,8 +71,8 @@ class BSTree:
       
     return _run(node=self.root, val=val)
   
-  def level(self, node):
-    def _run(node=self.root):
+  def level(self, node: Optional[Node]) -> int:
+    def _run(node: Optional[Node]=self.root) -> int:
       if node is None:
         return 0
       
@@ -79,10 +81,10 @@ class BSTree:
     return _run(node=node)
   
   # LOT = level order traversal
-  def LOT(self, level):
-    arr = []
+  def LOT(self, level: int) -> list[Node]:
+    arr: list[Node] = []
 
-    def _run(node=self.root, cur_lv=0):
+    def _run(node: Optional[Node]=self.root, cur_lv: int=0) -> None:
       if node is None:
         return
       
@@ -94,24 +96,10 @@ class BSTree:
 
     _run()
     return arr
-  
-  def max(self, node=None):
-    def _run(node=self.root):
-      if node is None:
-        return None
-      
-      if node.right is None:
-        return node
-      else:
-        return _run(node=node.right)
-      
-    if node is None:
-      return _run()
-    else:
-      return _run(node)
 
-  def min(self, node=None):
-    def _run(node=self.root):
+  # return min node
+  def min(self, node: Optional[Node]=None) -> Optional[Node]:
+    def _run(node: Optional[Node]) -> Optional[Node]:
       if node is None:
         return None
       
@@ -119,22 +107,38 @@ class BSTree:
         return node
       else:
         return _run(node=node.left)
+
+    target_node = node if node is not None else self.root
+    return _run(target_node)
+
+  # return max node
+  def max(self, node: Optional[Node]=None) -> Optional[Node]:
+    def _run(node: Optional[Node]) -> Optional[Node]:
+      if node is None:
+        return None
       
-    if node is None:
-      return _run()
-    else:
-      return _run(node)
-
-  def visual(self):
-    vals = self.DFS(type=1)
-
-    def space(val=None, s=1):
-      if val is None:
-        return ' '*len(str(self.max().val))*s
+      if node.right is None:
+        return node
       else:
-        r = len(str(self.max().val))
-        r_val = len(str(val))
-        return str(val) + ' '*(r-r_val)*s
+        return _run(node=node.right)
+
+    target_node = node if node is not None else self.root
+    return _run(target_node)
+
+  def visual(self) -> None:
+    vals: list[float] = self.DFS(type=1)
+
+    def space(val: Optional[float]=None, s: int=1) -> Optional[str]:
+      max_node = self.max()
+      if max_node is None:
+        return None
+    
+      if val is None:
+        return ' '*len(str(max_node.val))*s
+      
+      r = len(str(max_node.val))
+      r_val = len(str(val))
+      return str(val) + ' '*(r-r_val)*s
 
     for lv in range(self.level(self.root)):
       LOT = [node.val for node in self.LOT(lv)]
@@ -144,8 +148,8 @@ class BSTree:
       print('')
 
   # find parent node
-  def _prt(self, val):
-    def _run(val, node=self.root):
+  def _prt(self, val: float) -> Optional[Node]:
+    def _run(val: float, node: Optional[Node]) -> Optional[Node]:
       if node is None:
         return None
       
@@ -158,7 +162,7 @@ class BSTree:
     
     return _run(val=val, node=self.root)
 
-  def del_(self, val):
+  def del_(self, val: float) -> None:
     # node in need to be deleted
     node_del = self.search(val)
     if node_del is None:
@@ -176,11 +180,15 @@ class BSTree:
       else:
         if node_del.right:
           min_subtree = self.min(node_del.right)
+          if min_subtree is None: return
+    
           if min_subtree is node_del.right:
             self.root = min_subtree
             min_subtree.left = node_del.left
           else:
             min_subtree_prt = self._prt(min_subtree.val)
+            if min_subtree_prt is None: return
+            
             min_subtree.left = self.root.left
             self.root = min_subtree_prt.left
             min_subtree_prt.left = min_subtree.right
@@ -240,8 +248,8 @@ class BSTree:
             max_subtree.left = node_del.left
             max_subtree.right = node_del.right
 
-  def isBalanced(self, node=None):
-    def _run(node=self.root):
+  def isBalanced(self, node: Optional[Node]=None) -> bool:
+    def _run(node: Optional[Node]=self.root) -> bool:
       if node is None:
         return True
       
@@ -252,16 +260,17 @@ class BSTree:
         return False
       else:
         return _run(node=node.left) and _run(node=node.right)
-        
-    if node is None:
-      return _run(node=self.root)
-    else:
-      return _run(node=node)
+
+    target_node = self.root if node is None else node
+    return _run(target_node)
 
   # node reference rotation
-  def balance(self):
+  def balance(self) -> None:
+    if self.root is None:
+      return None
+
     # single rotation
-    def right_rotation(node):
+    def right_rotation(node: Node) -> None:
       prt = self._prt(val=node.val)
       if prt is None: # if root node
         t = self.root
@@ -279,7 +288,8 @@ class BSTree:
           prt.right.right = node
 
     # single rotation
-    def left_rotation(node):
+    def left_rotation(node: Optional[Node]) -> None:
+        if node is None: return
         prt = self._prt(val=node.val)
         if prt is None:  # if root node
           t = self.root
@@ -296,13 +306,10 @@ class BSTree:
             node.right = prt.right.left
             prt.right.left = node
 
-    def _balance_factor(node):
+    def _balance_factor(node: Node) -> int:
       return self.level(node.left) - self.level(node.right)
 
-    def _run(node=self.root):
-      if node is None:
-        return
-  
+    def _run(node: Node):
       # balance from leaf to root
       if node.left:
         _run(node=node.left)
@@ -312,7 +319,7 @@ class BSTree:
       # left rotation
       while _balance_factor(node=node) < -1:
         # check if double rotation needed
-        if _balance_factor(node.right) > 0:
+        if node.right is not None and _balance_factor(node.right) > 0:
           right_rotation(node=node.right)
 
         left_rotation(node=node)
@@ -320,16 +327,16 @@ class BSTree:
       # right rotation
       while _balance_factor(node=node) > 1:
         # check if double rotation needed
-        if _balance_factor(node.left) < 0:
+        if node.left is not None and _balance_factor(node.left) < 0:
           left_rotation(node=node.left)
 
         right_rotation(node=node)
 
-    _run(node=self.root)
+    return _run(self.root)
 
-# -------------------------------------------------
+# ------------------------------------------------
 
-arr = random.sample(range(1, 20), 10)
+arr = random.sample(range(1, 200), 100)
 # arr = [20,10,30,40]
 tree = BSTree()
 
